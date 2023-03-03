@@ -38,13 +38,14 @@ class ProducItem extends StatelessWidget {
               product.title,
               textAlign: TextAlign.center,
             ),
-            leading: IconButton(
-              icon: Icon(product.isFavorite
-                  ? Icons.favorite
-                  : Icons.favorite_border_outlined),
-              onPressed: () => product.toggleFavoriteStatus(),
-              color: Theme.of(context).colorScheme.secondary,
-            ),
+            leading: Consumer<ProductProvider>(
+                builder: (ctx, ProductProvider, child) => IconButton(
+                      icon: Icon(ProductProvider.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border_outlined),
+                      onPressed: () => ProductProvider.toggleFavoriteStatus(),
+                      color: Theme.of(context).colorScheme.secondary,
+                    )),
             trailing: IconButton(
               icon: Icon(Icons.star_rate),
               onPressed: () {},
