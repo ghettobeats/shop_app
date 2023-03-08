@@ -10,7 +10,7 @@ class ProductDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context)?.settings.arguments as String;
-    final loadedProduct = Provider.of<Products>(
+    final loadedProduct = Provider.of<ProductServices>(
       context,
       listen: false,
     ).findById(productId);

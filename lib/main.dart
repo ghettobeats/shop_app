@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/screens/order_screen.dart';
 
 import './screens/cart_screen.dart';
 import './screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products.dart';
 import './providers/Cart.dart';
+import 'providers/orders.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,8 +16,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (ctx) => Products()),
-        ChangeNotifierProvider(create: (ctx) => Cart())
+        //el ultimo es diferente porque los dos primeros son los recomendados pero se puede usar con value
+        ChangeNotifierProvider(create: (ctx) => ProductServices()),
+        ChangeNotifierProvider(create: (ctx) => Cartservices()),
+        ChangeNotifierProvider.value(value: OrderServices())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -28,7 +32,8 @@ class MyApp extends StatelessWidget {
         home: ProductOverviewScreen(),
         routes: {
           ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
-          CartScreen.routeName: (ctx) => CartScreen()
+          CartScreen.routeName: (ctx) => CartScreen(),
+          OrderScreen.routeName: (ctx) => OrderScreen()
         },
       ),
     );

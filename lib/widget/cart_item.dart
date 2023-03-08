@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/cart.dart' show Cart;
+import '../providers/cart.dart' show Cartservices;
 
 class CartItems extends StatelessWidget {
   final String id;
@@ -28,7 +28,7 @@ class CartItems extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        Provider.of<Cart>(context, listen: false).removeItem(productId);
+        Provider.of<Cartservices>(context, listen: false).removeItem(productId);
       },
       child: Card(
         margin: const EdgeInsets.symmetric(
@@ -43,7 +43,7 @@ class CartItems extends StatelessWidget {
                     padding: EdgeInsets.all(10), child: Text("\$${price}")),
               ),
               title: Text(title),
-              subtitle: Text('Total: \$${{price * quantity}}'),
+              subtitle: Text('Total: \$${price * quantity}'),
               trailing: Text('${quantity}'),
             )),
       ),

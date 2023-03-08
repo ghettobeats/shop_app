@@ -19,7 +19,7 @@ class ProducItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<ProductProvider>(context);
-    final cart = Provider.of<Cart>(context, listen: false);
+    final cart = Provider.of<Cartservices>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
