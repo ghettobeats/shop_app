@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 
-import '../providers/cart_provider.dart';
 import '../widget/appDrawer.dart';
 import '../widget/badge.dart';
 import '../widget/products_grid.dart';
@@ -24,14 +23,14 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           title: Text('My Shop'),
           actions: [
             PopupMenuButton(
+                child: const Icon(Icons.more_vert),
                 onSelected: (FiltersOptions value) => setState(() {
                       value == FiltersOptions.Favorite
                           ? _showFavorite = true
                           : _showFavorite = false;
                     }),
-                child: Icon(Icons.more_vert),
                 itemBuilder: (_) => [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         child: Text('Favorite'),
                         value: FiltersOptions.Favorite,
                       ),
