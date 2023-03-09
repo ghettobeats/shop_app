@@ -22,13 +22,15 @@ class OrderServices with ChangeNotifier {
   List<Order> get orders => [..._orders];
 
   void addOrder(List<Cart> cartProduct, double total) {
-    _orders.insert(
-        0,
-        Order(
-            id: DateTime.now().toString(),
-            amount: total,
-            products: cartProduct,
-            dateTime: DateTime.now()));
+    cartProduct.isNotEmpty
+        ? _orders.insert(
+            0,
+            Order(
+                id: DateTime.now().toString(),
+                amount: total,
+                products: cartProduct,
+                dateTime: DateTime.now()))
+        : null;
     notifyListeners();
   }
 }
