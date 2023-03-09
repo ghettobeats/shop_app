@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product_provider.dart';
 
-import '../providers/Cart.dart';
+import '../providers/cart_provider.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProducItem extends StatelessWidget {
@@ -19,7 +19,7 @@ class ProducItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<ProductProvider>(context);
-    final cart = Provider.of<Cartservices>(context, listen: false);
+    final cart = Provider.of<CartProvider>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -51,6 +51,20 @@ class ProducItem extends StatelessWidget {
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
                 cart.addItem(product.id, product.price, product.title);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'UNDO',
+                    ),
+                    duration: Duration(seconds: 2),
+                    action: SnackBarAction(
+                      label: "REMOVE",
+                      onPressed: () {
+                        cart.removeSingleItem(product.id);
+                      },
+                    ),
+                  ),
+                );
               },
               color: Theme.of(context).colorScheme.secondary,
             )),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 
-import '../providers/Cart.dart';
+import '../providers/cart_provider.dart';
 import '../widget/appDrawer.dart';
 import '../widget/badge.dart';
 import '../widget/products_grid.dart';
@@ -39,7 +40,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                         value: FiltersOptions.All,
                       )
                     ]),
-            Consumer<Cartservices>(
+            Consumer<CartProvider>(
               builder: (_, cart, ch) => Badges(
                 value: cart.itemCount.toString(),
                 child: ch as Widget,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/screens/order_screen.dart';
 
 import './screens/cart_screen.dart';
 import './screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products.dart';
-import './providers/Cart.dart';
+
 import 'providers/orders.dart';
 
 void main() => runApp(MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         //el ultimo es diferente porque los dos primeros son los recomendados pero se puede usar con value
         ChangeNotifierProvider(create: (ctx) => ProductServices()),
-        ChangeNotifierProvider(create: (ctx) => Cartservices()),
+        ChangeNotifierProvider(create: (ctx) => CartProvider()),
         ChangeNotifierProvider.value(value: OrderServices())
       ],
       child: MaterialApp(

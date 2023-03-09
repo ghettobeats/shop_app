@@ -14,10 +14,18 @@ class Cart {
   });
 }
 
-class Cartservices with ChangeNotifier {
+class CartProvider with ChangeNotifier {
   Map<String, Cart> _item = {};
 
   Map<String, Cart> get items => {..._item};
+
+  int get itemCount => _item.length;
+
+  double get TotalAmount {
+    var total = 0.0;
+    _item.forEach((key, value) => total += value.price * value.quantity);
+    return total;
+  }
 
   void addItem(String productId, double price, String title) {
     if (_item.containsKey(productId)) {
@@ -50,11 +58,21 @@ class Cartservices with ChangeNotifier {
     notifyListeners();
   }
 
-  int get itemCount => _item.length;
-
-  double get TotalAmount {
-    var total = 0.0;
-    _item.forEach((key, value) => total += value.price * value.quantity);
-    return total;
+  void removeSingleItem(String id) {
+    if (!_item.containsKey(id)) {
+      return;
+    }
+    if (_item[id]!.quantity > 1) {
+      _item.update(
+          id,
+          (existing) => Cart(
+              id: existing.id,
+              title: existing.title,
+              price: existing.price,
+              quantity: existing.quantity - 1));
+    } else {
+      _item.remove(id);
+    }
+    notifyListeners();
   }
 }
