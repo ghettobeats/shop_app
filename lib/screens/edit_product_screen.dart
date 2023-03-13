@@ -20,13 +20,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _form = GlobalKey<FormState>();
 
   var _product = ProductProvider(
-      id: '',
-      title: '',
-      description: '',
-      imageUrl: '',
-      isFavorite: false,
-      price: 0.0);
-
+    id: '',
+    title: '',
+    description: '',
+    imageUrl: '',
+    isFavorite: false,
+    price: 0.0,
+  );
+  var _isInit = true;
+  var _initValue = {
+    'title': '',
+    'description': '',
+    'price': '',
+    'imageUrl': ''
+  };
   @override
   void dispose() {
     _priceFocusNode.dispose();
@@ -41,8 +48,26 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void initState() {
     _imageFocusNode.addListener(_updateImageUrl);
-
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final productId = ModalRoute.of(context)?.settings.arguments as String;
+      if (productId != 'null') {
+        _product = Provider.of<ProductServices>(context).findById(productId);
+        _initValue = {
+          'title': _product.title,
+          'description': _product.description,
+          'price': _product.price.toString(),
+          'imageUrl': ''
+        };
+        _imageUrlController.text = _product.imageUrl;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   void _updateImageUrl() {
@@ -56,15 +81,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState!.save();
-    Provider.of<ProductServices>(context, listen: false).addProduct(_product);
-    Navigator.of(context).pushReplacementNamed(UserProductScreen.routeName);
+    if (_product.id != '') {
+      Provider.of<ProductServices>(context, listen: false)
+          .updateProduct(_product.id, _product);
+    } else {
+      Provider.of<ProductServices>(context, listen: false).addProduct(_product);
+    }
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Product'),
+        title: _product.id != 'null'
+            ? const Text('New Product')
+            : const Text('Edit Product'),
         actions: [
           IconButton(
             onPressed: _saveForm,
@@ -78,6 +110,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           key: _form,
           child: ListView(children: [
             TextFormField(
+              initialValue: _initValue['title'],
               decoration: const InputDecoration(
                   labelText: 'Title', hintText: 'Title...'),
               textInputAction: TextInputAction.next,
@@ -92,14 +125,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
               },
               onSaved: (value) {
                 _product = ProductProvider(
-                    id: '',
+                    id: _product.id,
                     title: value!,
                     description: _product.description,
                     price: _product.price,
-                    imageUrl: _product.imageUrl);
+                    imageUrl: _product.imageUrl,
+                    isFavorite: _product.isFavorite);
               },
             ),
             TextFormField(
+              initialValue: _initValue['price'],
               decoration:
                   const InputDecoration(labelText: 'Price', hintText: '50.00'),
               textInputAction: TextInputAction.next,
@@ -110,27 +145,33 @@ class _EditProductScreenState extends State<EditProductScreen> {
               },
               onSaved: (value) {
                 _product = ProductProvider(
-                    id: '',
+                    id: _product.id,
                     title: _product.title,
                     description: _product.description,
                     price: double.parse(value!),
-                    imageUrl: _product.imageUrl);
+                    imageUrl: _product.imageUrl,
+                    isFavorite: _product.isFavorite);
               },
             ),
             TextFormField(
+              initialValue: _initValue['description'],
               decoration: const InputDecoration(
                   labelText: 'Description', hintText: 'Descriptions...'),
               textInputAction: TextInputAction.next,
               maxLines: 3,
               keyboardType: TextInputType.multiline,
               focusNode: _descriptionFocusNode,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_imageFocusNode);
+              },
               onSaved: (value) {
                 _product = ProductProvider(
-                    id: '',
+                    id: _product.id,
                     title: _product.title,
                     description: value!,
                     price: _product.price,
-                    imageUrl: _product.imageUrl);
+                    imageUrl: _product.imageUrl,
+                    isFavorite: _product.isFavorite);
               },
             ),
             Row(
@@ -165,14 +206,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     textInputAction: TextInputAction.done,
                     controller: _imageUrlController,
                     focusNode: _imageFocusNode,
-                    onFieldSubmitted: (_) => _saveForm(),
+                    onFieldSubmitted: (_) => _saveForm,
                     onSaved: (value) {
                       _product = ProductProvider(
-                          id: '',
+                          id: _product.id,
                           title: _product.title,
-                          description: value!,
+                          description: _product.description,
                           price: _product.price,
-                          imageUrl: value);
+                          imageUrl: value!,
+                          isFavorite: _product.isFavorite);
                     },
                   ),
                 ),

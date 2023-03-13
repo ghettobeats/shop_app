@@ -13,25 +13,27 @@ class UserProductScreen extends StatelessWidget {
     final products = Provider.of<ProductServices>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your products'),
+        title: const Text('Your products'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(EditProductScreen.routeName,
-                  arguments: {'id': 'p8'});
+              Navigator.of(context)
+                  .pushNamed(EditProductScreen.routeName, arguments: 'null');
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           )
         ],
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: ListView.builder(
             itemCount: products.items.length,
             itemBuilder: (_, index) => Column(
                   children: [
-                    UserProductItem(products.items[index].title,
+                    UserProductItem(
+                        products.items[index].id,
+                        products.items[index].title,
                         products.items[index].imageUrl),
                     Divider(),
                   ],

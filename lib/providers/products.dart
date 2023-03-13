@@ -45,6 +45,8 @@ class ProductServices with ChangeNotifier {
 
   ProductProvider findById(String id) => _item.firstWhere((e) => e.id == id);
 
+  //bool Exist(String id) => _item.any((element) => element.id == id);
+
   void addProduct(ProductProvider product) {
     final newProduct = ProductProvider(
         id: DateTime.now().toString(),
@@ -53,6 +55,23 @@ class ProductServices with ChangeNotifier {
         price: product.price,
         imageUrl: product.imageUrl);
     _item.add(newProduct);
+    notifyListeners();
+  }
+
+  void updateProduct(String id, ProductProvider newProduct) {
+    final prodIndex = _item.indexWhere((element) => element.id == id);
+
+    if (prodIndex >= 0) {
+      _item[prodIndex] = newProduct;
+
+      notifyListeners();
+    } else {
+      print('');
+    }
+  }
+
+  void deleteProduct(String id) {
+    _item.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 }
