@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../models/product.dart';
+import '../providers/product_provider.dart';
+import '../providers/products.dart';
+import 'user_product_screen.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -16,7 +19,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
 
-  var _product = Product(
+  var _product = ProductProvider(
       id: '',
       title: '',
       description: '',
@@ -49,10 +52,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
-    if (_form.currentState!.validate()) {
+    if (!_form.currentState!.validate()) {
       return;
     }
     _form.currentState!.save();
+    Provider.of<ProductServices>(context, listen: false).addProduct(_product);
+    Navigator.of(context).pushReplacementNamed(UserProductScreen.routeName);
   }
 
   @override
@@ -86,7 +91,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 return null;
               },
               onSaved: (value) {
-                _product = Product(
+                _product = ProductProvider(
                     id: '',
                     title: value!,
                     description: _product.description,
@@ -104,7 +109,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 FocusScope.of(context).requestFocus(_descriptionFocusNode);
               },
               onSaved: (value) {
-                _product = Product(
+                _product = ProductProvider(
                     id: '',
                     title: _product.title,
                     description: _product.description,
@@ -120,7 +125,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
               keyboardType: TextInputType.multiline,
               focusNode: _descriptionFocusNode,
               onSaved: (value) {
-                _product = Product(
+                _product = ProductProvider(
                     id: '',
                     title: _product.title,
                     description: value!,
@@ -162,7 +167,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     focusNode: _imageFocusNode,
                     onFieldSubmitted: (_) => _saveForm(),
                     onSaved: (value) {
-                      _product = Product(
+                      _product = ProductProvider(
                           id: '',
                           title: _product.title,
                           description: value!,

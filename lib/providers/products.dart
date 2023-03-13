@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../providers/product_provider.dart';
 
 class ProductServices with ChangeNotifier {
@@ -44,7 +45,14 @@ class ProductServices with ChangeNotifier {
 
   ProductProvider findById(String id) => _item.firstWhere((e) => e.id == id);
 
-  void addProduct() {
+  void addProduct(ProductProvider product) {
+    final newProduct = ProductProvider(
+        id: DateTime.now().toString(),
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl);
+    _item.add(newProduct);
     notifyListeners();
   }
 }
