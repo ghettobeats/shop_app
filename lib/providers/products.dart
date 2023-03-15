@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../providers/product_provider.dart';
 
 class ProductServices with ChangeNotifier {
@@ -47,15 +48,29 @@ class ProductServices with ChangeNotifier {
 
   //bool Exist(String id) => _item.any((element) => element.id == id);
 
-  void addProduct(ProductProvider product) {
-    final newProduct = ProductProvider(
-        id: DateTime.now().toString(),
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        imageUrl: product.imageUrl);
-    _item.add(newProduct);
-    notifyListeners();
+//Future
+  Future<void> addProduct(ProductProvider product) {
+    const Url = 'fakestoreapi.com';
+    return http
+        .post(
+      Uri.https(Url, '/products'),
+      body: json.encode({
+        'price': product.price,
+        'description': product.description,
+        'image': product.imageUrl,
+        'category': "women's clothing",
+      }),
+    )
+        .then((value) {
+      final newProduct = ProductProvider(
+          id: DateTime.now().toString(),
+          title: product.title,
+          description: product.description,
+          price: product.price,
+          imageUrl: product.imageUrl);
+      _item.add(newProduct);
+      notifyListeners();
+    }).onError((error, stackTrace) {});
   }
 
   void updateProduct(String id, ProductProvider newProduct) {
@@ -70,7 +85,7 @@ class ProductServices with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
+  deleteProduct(String id) {
     _item.removeWhere((element) => element.id == id);
     notifyListeners();
   }
