@@ -49,19 +49,18 @@ class ProductServices with ChangeNotifier {
   //bool Exist(String id) => _item.any((element) => element.id == id);
 
 //Future
-  Future<void> addProduct(ProductProvider product) {
+  Future<void> addProduct(ProductProvider product) async {
     const Url = 'fakestoreapi.com';
-    return http
-        .post(
-      Uri.https(Url, '/products'),
-      body: json.encode({
-        'price': product.price,
-        'description': product.description,
-        'image': product.imageUrl,
-        'category': "women's clothing",
-      }),
-    )
-        .then((value) {
+    try {
+      final response = await http.post(
+        Uri.https(Url, '/products'),
+        body: json.encode({
+          'price': product.price,
+          'description': product.description,
+          'image': product.imageUrl,
+          'category': "women's clothing",
+        }),
+      );
       final newProduct = ProductProvider(
           id: DateTime.now().toString(),
           title: product.title,
@@ -70,7 +69,9 @@ class ProductServices with ChangeNotifier {
           imageUrl: product.imageUrl);
       _item.add(newProduct);
       notifyListeners();
-    }).onError((error, stackTrace) {});
+    } catch (e) {
+      throw e;
+    }
   }
 
   void updateProduct(String id, ProductProvider newProduct) {
