@@ -74,6 +74,7 @@ class ProductServices with ChangeNotifier {
       final response = await http.post(
         Uri.https(Url, '/products'),
         body: json.encode({
+          'title': product.title,
           'price': product.price,
           'description': product.description,
           'image': product.imageUrl,
@@ -93,10 +94,20 @@ class ProductServices with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, ProductProvider newProduct) {
+  Future<void> updateProduct(String id, ProductProvider newProduct) async {
     final prodIndex = _item.indexWhere((element) => element.id == id);
 
     if (prodIndex >= 0) {
+      final Url = 'fakestoreapi.com';
+      final response = await http.patch(
+        Uri.https(Url, '/products/$id'),
+        body: json.encode({
+          'title': newProduct.title,
+          'price': newProduct.price,
+          'description': newProduct.description,
+          'image': newProduct.imageUrl,
+        }),
+      );
       _item[prodIndex] = newProduct;
 
       notifyListeners();
