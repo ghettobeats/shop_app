@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -48,9 +50,10 @@ class ProductServices with ChangeNotifier {
 
   //bool Exist(String id) => _item.any((element) => element.id == id);
   Future<void> fetchAndsetData() async {
-    const Url = 'fakestoreapi.com';
+    const url = 'my.api.mockaroo.com';
     try {
-      final response = await http.get(Uri.https(Url, 'products'));
+      final response = await http
+          .get(Uri.https(url, '/product'), headers: {'X-API-Key': 'a448f120'});
       var extractedDAta = json.decode(response.body);
 
       extractedDAta.forEach((value) {
@@ -59,26 +62,28 @@ class ProductServices with ChangeNotifier {
             title: value['title'],
             description: value['description'],
             price: double.parse(value['price'].toString()),
-            imageUrl: value['image']));
+            imageUrl: value['imageUrl']));
+
         notifyListeners();
       });
     } catch (e) {
+      print(e);
       throw e;
     }
   }
 
 //Future
   Future<void> addProduct(ProductProvider product) async {
-    const Url = 'fakestoreapi.com';
+    const Url = 'my.api.mockaroo.com';
     try {
       final response = await http.post(
         Uri.https(Url, '/products'),
+        headers: {'X-API-Key': 'a448f120'},
         body: json.encode({
           'title': product.title,
           'price': product.price,
           'description': product.description,
           'image': product.imageUrl,
-          'category': "women's clothing",
         }),
       );
       final newProduct = ProductProvider(
@@ -98,9 +103,10 @@ class ProductServices with ChangeNotifier {
     final prodIndex = _item.indexWhere((element) => element.id == id);
 
     if (prodIndex >= 0) {
-      final Url = 'fakestoreapi.com';
+      final Url = 'my.api.mockaroo.com';
       final response = await http.patch(
         Uri.https(Url, '/products/$id'),
+        headers: {'X-API-Key': 'a448f120'},
         body: json.encode({
           'title': newProduct.title,
           'price': newProduct.price,
@@ -116,8 +122,21 @@ class ProductServices with ChangeNotifier {
     }
   }
 
-  deleteProduct(String id) {
-    _item.removeWhere((element) => element.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = 'my.api.mockaroo.com';
+    final existingProductIndex = _item.indexWhere((prod) => prod.id == id);
+    var existingProduct = _item[existingProductIndex];
+    _item.removeAt(existingProductIndex);
     notifyListeners();
+    final response = await http.delete(Uri.https(url, '/product.json/$id'),
+        headers: {'X-API-Key': 'a448f120'});
+
+    if (response.statusCode >= 400) {
+      _item.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
+    }
+    existingProduct = ProductProvider(
+        id: '', title: '', description: '', price: 00.00, imageUrl: '');
   }
 }

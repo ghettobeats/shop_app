@@ -1,6 +1,9 @@
 //este provider se creara para el curso 198 uniendo modelos & providers
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ProductProvider with ChangeNotifier {
   final String id;
@@ -19,8 +22,26 @@ class ProductProvider with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavoriteStatus() {
+  void _setFavValue(bool newValue) {
+    isFavorite = newValue;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus() async {
+    final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
+    final url = 'my.api.mockaroo.com';
+    try {
+      final response = await http.patch(Uri.https(url, '/product/$id'),
+          headers: {'X-API-Key': 'a448f120'},
+          body: jsonEncode({'isFavorite': isFavorite}));
+      print(response.body);
+      if (response.statusCode >= 400) {
+        _setFavValue(oldStatus);
+      }
+    } catch (e) {
+      _setFavValue(oldStatus);
+    }
   }
 }
