@@ -19,9 +19,41 @@ class Order {
 }
 
 class OrderServices with ChangeNotifier {
-  final List<Order> _orders = [];
+  List<Order> _orders = [];
 
   List<Order> get orders => [..._orders];
+
+  Future<void> fetchAndSetOrder() async {
+    const url = 'my.api.mockaroo.com';
+    final response = await http
+        .get(Uri.https(url, '/order'), headers: {'X-API-Key': 'a448f120'});
+    final List<Order> loaderOrders = [];
+    //no hago nada poque mi enpoint no me devuelve un map y no quise joder con esto
+    //asi que debo buscar la forma de tambien hacerlo con una lista
+    //final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    // if (extractedData == null) {
+    //   retun;
+    // }
+    //   extractedData.forEach((key,orderData) {
+    //   loaderOrders.add(
+    //     Order(
+    //       id: key,
+    //       amount: orderData['amount'],
+    //       dateTime: DateTime.parse(orderData['dateTime']),
+    //       products: (orderData['product'] as List<dynamic>)
+    //           .map((item) => Cart(
+    //               id: item['id'],
+    //               title: item['title'],
+    //               price: item['price'],
+    //               quantity: item['quantity']))
+    //           .toList(),
+    //     ),
+    //   );
+    // });
+
+    _orders = loaderOrders.reversed.toList();
+    notifyListeners();
+  }
 
   Future<void> addOrder(List<Cart> cartProduct, double total) async {
     final timestamp = DateTime.now();

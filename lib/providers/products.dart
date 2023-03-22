@@ -54,9 +54,11 @@ class ProductServices with ChangeNotifier {
     try {
       final response = await http
           .get(Uri.https(url, '/product'), headers: {'X-API-Key': 'a448f120'});
-      var extractedDAta = json.decode(response.body);
-
-      extractedDAta.forEach((value) {
+      var extractedData = json.decode(response.body);
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach((value) {
         _item.add(ProductProvider(
             id: value['id'].toString(),
             title: value['title'],

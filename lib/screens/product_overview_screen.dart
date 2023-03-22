@@ -21,10 +21,13 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool _isloading = true;
   @override
   void initState() {
-    // Provider.of<ProductServices>(context).fetchAndsetData(); Wont work!
-    // Future.delayed(Duration.zero).then((value) {
-    //   Provider.of<ProductServices>(context).fetchAndsetData();
+    //--- works but without setState----
+    // Future.delayed(Duration.zero).then((_) {
+    //   Provider.of<ProductServices>(context, listen: false)
+    //       .fetchAndsetData()
+    //       .then((value) => print("welcome"));
     // });
+
     super.initState();
   }
 
