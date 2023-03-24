@@ -5,7 +5,9 @@ import 'package:shop_app/providers/products.dart';
 import '../screens/edit_product_screen.dart';
 
 class UserProductItem extends StatelessWidget {
-  final String id, title, imageUrl;
+  final String? id;
+  final String title;
+  final String imageUrl;
 
   UserProductItem(this.id, this.title, this.imageUrl);
   @override

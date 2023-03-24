@@ -19,10 +19,10 @@ class Cartservices with ChangeNotifier {
 
   Map<String, Cart> get items => {..._item};
 
-  void addItem(String productId, double price, String title) {
+  void addItem(String? productId, double price, String title) {
     if (_item.containsKey(productId)) {
       _item.update(
-          productId,
+          productId!,
           (ExistingItem) => Cart(
               id: ExistingItem.id,
               title: ExistingItem.title,
@@ -30,7 +30,7 @@ class Cartservices with ChangeNotifier {
               price: ExistingItem.price));
     } else {
       _item.putIfAbsent(
-          productId,
+          productId!,
           () => Cart(
               id: DateTime.now().toString(),
               title: title,

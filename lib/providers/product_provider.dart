@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ProductProvider with ChangeNotifier {
-  final String id;
+  final String? id;
   final String title;
   final String description;
   final double price;
@@ -31,12 +31,10 @@ class ProductProvider with ChangeNotifier {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
-    final url = 'my.api.mockaroo.com';
+    final url = 'flutterrdshop-default-rtdb.firebaseio.com';
     try {
-      final response = await http.patch(Uri.https(url, '/product/$id'),
-          headers: {'X-API-Key': 'a448f120'},
+      final response = await http.patch(Uri.https(url, '/products/$id.json'),
           body: jsonEncode({'isFavorite': isFavorite}));
-      print(response.body);
       if (response.statusCode >= 400) {
         _setFavValue(oldStatus);
       }

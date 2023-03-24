@@ -6,7 +6,7 @@ import 'dart:convert';
 import '../providers/product_provider.dart';
 
 class ProductServices with ChangeNotifier {
-  final List<ProductProvider> _item = [
+  List<ProductProvider> _item = [
     // ProductProvider(
     //   id: 'p1',
     //   title: 'Red Shirt',
@@ -50,46 +50,48 @@ class ProductServices with ChangeNotifier {
 
   //bool Exist(String id) => _item.any((element) => element.id == id);
   Future<void> fetchAndsetData() async {
-    const url = 'my.api.mockaroo.com';
+    const url = 'flutterrdshop-default-rtdb.firebaseio.com';
     try {
-      final response = await http
-          .get(Uri.https(url, '/product'), headers: {'X-API-Key': 'a448f120'});
-      var extractedData = json.decode(response.body);
+      final response = await http.get(Uri.https(url, '/products.json'));
+
+      var extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final List<ProductProvider> loadedProduct = [];
       if (extractedData == null) {
         return;
       }
-      extractedData.forEach((value) {
-        _item.add(ProductProvider(
-            id: value['id'].toString(),
+      extractedData.forEach((key, value) {
+        loadedProduct.add(ProductProvider(
+            id: key,
             title: value['title'],
             description: value['description'],
             price: double.parse(value['price'].toString()),
-            imageUrl: value['imageUrl']));
+            isFavorite: value['isFavorite'],
+            imageUrl: value['image']));
 
+        _item = loadedProduct;
         notifyListeners();
       });
-    } catch (e) {
-      print(e);
-      throw e;
+    } catch (error) {
+      throw error;
     }
   }
 
 //Future
   Future<void> addProduct(ProductProvider product) async {
-    const Url = 'my.api.mockaroo.com';
+    const url = 'flutterrdshop-default-rtdb.firebaseio.com';
     try {
       final response = await http.post(
-        Uri.https(Url, '/products'),
-        headers: {'X-API-Key': 'a448f120'},
+        Uri.https(url, '/products.json'),
         body: json.encode({
           'title': product.title,
           'price': product.price,
           'description': product.description,
           'image': product.imageUrl,
+          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = ProductProvider(
-          id: DateTime.now().toString(),
+          id: json.decode(response.body)['name'],
           title: product.title,
           description: product.description,
           price: product.price,
@@ -101,14 +103,13 @@ class ProductServices with ChangeNotifier {
     }
   }
 
-  Future<void> updateProduct(String id, ProductProvider newProduct) async {
+  Future<void> updateProduct(String? id, ProductProvider newProduct) async {
     final prodIndex = _item.indexWhere((element) => element.id == id);
 
     if (prodIndex >= 0) {
-      final Url = 'my.api.mockaroo.com';
+      const url = 'flutterrdshop-default-rtdb.firebaseio.com';
       final response = await http.patch(
-        Uri.https(Url, '/products/$id'),
-        headers: {'X-API-Key': 'a448f120'},
+        Uri.https(url, '/products/$id.json'),
         body: json.encode({
           'title': newProduct.title,
           'price': newProduct.price,
@@ -117,21 +118,19 @@ class ProductServices with ChangeNotifier {
         }),
       );
       _item[prodIndex] = newProduct;
-
       notifyListeners();
     } else {
       print('');
     }
   }
 
-  Future<void> deleteProduct(String id) async {
-    final url = 'my.api.mockaroo.com';
+  Future<void> deleteProduct(String? id) async {
+    const url = 'flutterrdshop-default-rtdb.firebaseio.com';
     final existingProductIndex = _item.indexWhere((prod) => prod.id == id);
     var existingProduct = _item[existingProductIndex];
     _item.removeAt(existingProductIndex);
     notifyListeners();
-    final response = await http.delete(Uri.https(url, '/product.json/$id'),
-        headers: {'X-API-Key': 'a448f120'});
+    final response = await http.delete(Uri.https(url, '/products/$id.json'));
 
     if (response.statusCode >= 400) {
       _item.insert(existingProductIndex, existingProduct);
@@ -139,6 +138,6 @@ class ProductServices with ChangeNotifier {
       throw HttpException('Could not delete product.');
     }
     existingProduct = ProductProvider(
-        id: '', title: '', description: '', price: 00.00, imageUrl: '');
+        id: null, title: '', description: '', price: 00.00, imageUrl: '');
   }
 }

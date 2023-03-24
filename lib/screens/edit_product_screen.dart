@@ -20,7 +20,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
   var _product = ProductProvider(
-    id: '',
+    id: null,
     title: '',
     description: '',
     imageUrl: '',
@@ -28,12 +28,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     price: 0.0,
   );
   var _isInit = true;
-  var _initValue = {
-    'title': '',
-    'description': '',
-    'price': '',
-    'imageUrl': ''
-  };
+  var _initValue = {'title': '', 'description': '', 'price': '', 'image': ''};
   @override
   void dispose() {
     _priceFocusNode.dispose();
@@ -84,7 +79,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     setState(() {
       _isLoading = true;
     });
-    if (_product.id != '') {
+    if (_product.id != null) {
       await Provider.of<ProductServices>(context, listen: false)
           .updateProduct(_product.id, _product);
     } else {
@@ -112,11 +107,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
         //   // Navigator.of(context).pop();
         // }
       }
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   @override
