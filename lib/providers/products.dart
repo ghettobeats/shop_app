@@ -51,9 +51,10 @@ class ProductServices with ChangeNotifier {
   //bool Exist(String id) => _item.any((element) => element.id == id);
   Future<void> fetchAndsetData() async {
     const url = 'flutterrdshop-default-rtdb.firebaseio.com';
+
+    // final urls = Uri.parse("https://flutterrdshop-default-rtdb.firebaseio.com/products.json");
     try {
       final response = await http.get(Uri.https(url, '/products.json'));
-
       var extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<ProductProvider> loadedProduct = [];
       if (extractedData == null) {
