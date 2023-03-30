@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
+
+import '../providers/auth.dart';
 
 class AuthCard extends StatefulWidget {
   const AuthCard({super.key});
@@ -14,7 +17,8 @@ class _AuthCardState extends State<AuthCard> {
   Map<String, String> _authData = {'email': '', 'password': ''};
   bool _isLoading = false;
   final _passwordController = TextEditingController();
-  void _submit() {
+
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       //Invalid!
       return;
@@ -25,8 +29,12 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.Login) {
       //log user in
+      await Provider.of<Auth>(context, listen: false)
+          .login(_authData['email']!, _authData['password']!);
     } else {
       //Sign user up
+      await Provider.of<Auth>(context, listen: false)
+          .signup(_authData['email']!, _authData['password']!);
     }
     setState(() {
       _isLoading = false;

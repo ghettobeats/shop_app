@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
 import 'package:shop_app/screens/order_screen.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
         //el ultimo es diferente porque los dos primeros son los recomendados pero se puede usar con value
         ChangeNotifierProvider(create: (ctx) => ProductServices()),
         ChangeNotifierProvider(create: (ctx) => CartProvider()),
-        ChangeNotifierProvider.value(value: OrderServices())
+        ChangeNotifierProvider.value(value: OrderServices()),
+        ChangeNotifierProvider(create: (ctx) => Auth())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
