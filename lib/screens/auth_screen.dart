@@ -20,12 +20,12 @@ class AuthScreen extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
-                Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+                const Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
+                const Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              stops: [0, 1],
+              stops: const [0, 1],
             ),
           ),
         ),
@@ -39,22 +39,22 @@ class AuthScreen extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      padding: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.only(bottom: 20.0),
+                      padding: const EdgeInsets.symmetric(
                           vertical: 20.0, horizontal: 94.0),
                       transform: Matrix4.rotationZ(-8 * pi / 180)
                         ..translate(-5.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.deepOrange.shade900,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               blurRadius: 8,
                               color: Colors.black26,
                               offset: Offset(0, 2),
                             )
                           ]),
-                      child: Text(
+                      child: const Text(
                         'MyShop',
                         style: TextStyle(
                             color: Colors.white,

@@ -20,30 +20,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        //el ultimo es diferente porque los dos primeros son los recomendados pero se puede usar con value
-        ChangeNotifierProvider(create: (ctx) => ProductServices()),
-        ChangeNotifierProvider(create: (ctx) => CartProvider()),
-        ChangeNotifierProvider.value(value: OrderServices()),
-        ChangeNotifierProvider(create: (ctx) => Auth())
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Shop App',
-        theme: ThemeData().copyWith(
-          colorScheme: ThemeData()
-              .colorScheme
-              .copyWith(secondary: Colors.deepOrange, primary: Colors.purple),
-        ),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrderScreen.routeName: (ctx) => OrderScreen(),
-          UserProductScreen.routeName: (ctx) => UserProductScreen(),
-          EditProductScreen.routeName: (context) => EditProductScreen(),
-        },
-      ),
-    );
+        providers: [
+          //el ultimo es diferente porque los dos primeros son los recomendados pero se puede usar con value
+          //ChangeNotifierProvider(create: (ctx) => ProductServices("", [])),
+          ChangeNotifierProvider(create: (ctx) => Auth()),
+          ChangeNotifierProxyProvider<Auth, ProductServices>(
+            create: (ctx) => ProductServices(Auth(), []),
+            update: (context, value, previous) =>
+                ProductServices(value, previous != null ? [] : previous!.items),
+          ),
+          ChangeNotifierProvider(create: (ctx) => CartProvider()),
+          ChangeNotifierProvider.value(value: OrderServices())
+        ],
+        child: Consumer<Auth>(
+          builder: (ctx, auth, _) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Shop App',
+            theme: ThemeData().copyWith(
+              colorScheme: ThemeData().colorScheme.copyWith(
+                  secondary: Colors.deepOrange, primary: Colors.purple),
+            ),
+            home: auth.isAuth ? ProductOverviewScreen() : AuthScreen(),
+            routes: {
+              ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
+              CartScreen.routeName: (ctx) => CartScreen(),
+              OrderScreen.routeName: (ctx) => OrderScreen(),
+              UserProductScreen.routeName: (ctx) => UserProductScreen(),
+              EditProductScreen.routeName: (context) => EditProductScreen(),
+            },
+          ),
+        ));
   }
 }
