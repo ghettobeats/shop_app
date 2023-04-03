@@ -39,7 +39,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       });
 
       Provider.of<ProductServices>(context, listen: false)
-          .fetchAndsetData()
+          .fetchAndsetData(true)
           .then(
             (_) => setState(() {
               _isloading = false;

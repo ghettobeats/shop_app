@@ -58,10 +58,14 @@ class ProductServices with ChangeNotifier {
 
   //bool Exist(String id) => _item.any((element) => element.id == id);
 
-  Future<void> fetchAndsetData() async {
+//[bool filter = false] opcional argument
+  Future<void> fetchAndsetData([bool filter = false]) async {
     //const url = 'flutterrdshop-default-rtdb.firebaseio.com';
+    final filtering =
+        filter ? 'orderBy="creatorId"&equalTo="${authentication.userId}"' : '';
+
     var urls = Uri.parse(
-        "https://flutterrdshop-default-rtdb.firebaseio.com/products.json?auth=${authentication.token}");
+        'https://flutterrdshop-default-rtdb.firebaseio.com/products.json?auth=${authentication.token}&$filtering');
     try {
       // final response =
       //     await http.get(Uri.https(url, '/products.json?auth=$authToken'));
@@ -109,6 +113,7 @@ class ProductServices with ChangeNotifier {
           'price': product.price,
           'description': product.description,
           'image': product.imageUrl,
+          'creatorId': authentication.userId
         }),
       );
       final newProduct = ProductProvider(
