@@ -21,12 +21,14 @@ class Order {
 class OrderServices with ChangeNotifier {
   List<Order> _orders = [];
   String token;
-  OrderServices(this.token, this._orders);
+  String userId;
+
+  OrderServices(this.token, this._orders, this.userId);
   List<Order> get orders => [..._orders];
 
   Future<void> fetchAndSetOrder() async {
     final url = Uri.parse(
-        'https://flutterrdshop-default-rtdb.firebaseio.com/orders.json?auth=$token');
+        'https://flutterrdshop-default-rtdb.firebaseio.com/orders/$userId.json?auth=$token');
     final response = await http.get(url);
     final List<Order> loaderOrders = [];
 
@@ -57,7 +59,7 @@ class OrderServices with ChangeNotifier {
 
   Future<void> addOrder(List<Cart> cartProduct, double total) async {
     final url = Uri.parse(
-        'https://flutterrdshop-default-rtdb.firebaseio.com/orders.json?auth=$token');
+        'https://flutterrdshop-default-rtdb.firebaseio.com/orders/$userId.json?auth=$token');
     final timestamp = DateTime.now();
     try {
       final response = await http.post(
