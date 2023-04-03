@@ -122,7 +122,7 @@ class ProductServices with ChangeNotifier {
 
     if (prodIndex >= 0) {
       final urls = Uri.parse(
-          "https://flutterrdshop-default-rtdb.firebaseio.com/products.json?auth=${authentication.token}");
+          "https://flutterrdshop-default-rtdb.firebaseio.com/products/$id.json?auth=${authentication.token}");
       // const url = 'flutterrdshop-default-rtdb.firebaseio.com';
       final response = await http.patch(
         urls,
@@ -142,7 +142,7 @@ class ProductServices with ChangeNotifier {
 
   Future<void> deleteProduct(String? id) async {
     final urls = Uri.parse(
-        "https://flutterrdshop-default-rtdb.firebaseio.com/products.json?auth=${authentication.token}");
+        "https://flutterrdshop-default-rtdb.firebaseio.com/products/$id.json?auth=${authentication.token}");
     // const url = 'flutterrdshop-default-rtdb.firebaseio.com';
     final existingProductIndex = _item.indexWhere((prod) => prod.id == id);
     var existingProduct = _item[existingProductIndex];

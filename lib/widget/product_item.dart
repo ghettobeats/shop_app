@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product_provider.dart';
 
+import '../providers/auth.dart';
 import '../providers/cart_provider.dart';
 import '../screens/product_detail_screen.dart';
 
@@ -20,6 +21,10 @@ class ProducItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<ProductProvider>(context);
     final cart = Provider.of<CartProvider>(context, listen: false);
+    /*en linea puedo usar esta funcionalidad es igual a los providers context.read context.watch example context.read<Auth>().token
+      investigar acerca de esto
+    */
+    final auth = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -44,7 +49,8 @@ class ProducItem extends StatelessWidget {
                       icon: Icon(ProductProvider.isFavorite
                           ? Icons.favorite
                           : Icons.favorite_border_outlined),
-                      onPressed: () => ProductProvider.toggleFavoriteStatus(),
+                      onPressed: () => ProductProvider.toggleFavoriteStatus(
+                          context.read<Auth>().token),
                       color: Theme.of(context).colorScheme.secondary,
                     )),
             trailing: IconButton(
