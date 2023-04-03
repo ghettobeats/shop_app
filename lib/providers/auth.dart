@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class Auth with ChangeNotifier {
   String _token = "";
   DateTime? _expiryDate;
-  String? _userId;
+  late String _userId;
 
   bool get isAuth => token != "";
 
@@ -19,6 +19,8 @@ class Auth with ChangeNotifier {
     }
     return "";
   }
+
+  String get userId => _userId;
 
   Future<void> _auth(String email, String pass, String urlSegment) async {
     final url =

@@ -50,7 +50,8 @@ class ProducItem extends StatelessWidget {
                           ? Icons.favorite
                           : Icons.favorite_border_outlined),
                       onPressed: () => ProductProvider.toggleFavoriteStatus(
-                          context.read<Auth>().token),
+                          context.read<Auth>().token,
+                          context.read<Auth>().userId),
                       color: Theme.of(context).colorScheme.secondary,
                     )),
             trailing: IconButton(

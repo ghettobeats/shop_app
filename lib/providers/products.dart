@@ -44,7 +44,10 @@ class ProductServices with ChangeNotifier {
     // ),
   ];
 
-  ProductServices(this.authentication, this._item);
+  ProductServices(
+    this.authentication,
+    this._item,
+  );
 
   List<ProductProvider> get items => [..._item];
 
@@ -57,25 +60,30 @@ class ProductServices with ChangeNotifier {
 
   Future<void> fetchAndsetData() async {
     //const url = 'flutterrdshop-default-rtdb.firebaseio.com';
-    final urls = Uri.parse(
+    var urls = Uri.parse(
         "https://flutterrdshop-default-rtdb.firebaseio.com/products.json?auth=${authentication.token}");
     try {
       // final response =
       //     await http.get(Uri.https(url, '/products.json?auth=$authToken'));
-      final response = await http.get(urls);
-      var extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final List<ProductProvider> loadedProduct = [];
-      if (extractedData == null) {
+      final response = json.decode((await http.get(urls)).body);
+      if (response == 'null') {
         return;
       }
+      urls = Uri.parse(
+          'https://flutterrdshop-default-rtdb.firebaseio.com/userFavorites/${authentication.userId}.json?auth=${authentication.token}');
+      var favoriteResponse = json.decode((await http.get(urls)).body);
+      var extractedData = response as Map<String, dynamic>;
+      final List<ProductProvider> loadedProduct = [];
+
       extractedData.forEach((key, value) {
-        print(value);
         loadedProduct.add(ProductProvider(
             id: key,
             title: value['title'],
             description: value['description'],
             price: double.parse(value['price'].toString()),
-            isFavorite: value['isFavorite'],
+            isFavorite: favoriteResponse == null
+                ? false
+                : favoriteResponse[key] ?? false,
             imageUrl: value['image']));
 
         _item = loadedProduct;
@@ -101,7 +109,6 @@ class ProductServices with ChangeNotifier {
           'price': product.price,
           'description': product.description,
           'image': product.imageUrl,
-          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = ProductProvider(
