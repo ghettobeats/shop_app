@@ -53,7 +53,10 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('My Shop'),
+          title: Text(
+            'My Shop',
+            style: TextStyle(fontFamily: 'Anton'),
+          ),
           actions: [
             PopupMenuButton(
                 child: const Icon(Icons.more_vert),

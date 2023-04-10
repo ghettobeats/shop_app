@@ -23,9 +23,13 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-fonts:
-    - family: Anton
-      fonts:
-        - asset: assets/fonts/Anton-Regular.ttf
-        
+  assets: 
+    - assets/images/placeholder.png
+
+  fonts:
+      - family: Anton
+        fonts:
+          - asset: assets/fonts/Anton-Regular.ttf
+
+
        
