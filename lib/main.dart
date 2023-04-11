@@ -11,6 +11,7 @@ import './screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products.dart';
 
+import 'helpers/custom_route.dart';
 import 'providers/orders.dart';
 import 'screens/edit_product_screen.dart';
 import 'screens/splash_screen.dart';
@@ -44,6 +45,12 @@ class MyApp extends StatelessWidget {
             theme: ThemeData().copyWith(
               colorScheme: ThemeData().colorScheme.copyWith(
                   secondary: Colors.deepOrange, primary: Colors.purple),
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionBuilder()
+                },
+              ),
             ),
             home: auth.isAuth
                 ? ProductOverviewScreen()
